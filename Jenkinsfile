@@ -31,24 +31,6 @@ pipeline {
         }
       }
     }
-    stage('Artifact Analysis') {
-      parallel {
-        stage('Container Scan') {
-          steps {
-            container('docker-tools') {
-              sh "grype ${APP_NAME}"
-            }
-          }
-        }
-        stage('Container Audit') {
-          steps {
-            container('docker-tools') {
-              sh "dockle ${APP_NAME}"
-            }
-          }
-        }
-      }
-    }
     stage('Build') {
       steps {
         container('maven') {
@@ -86,6 +68,24 @@ pipeline {
       steps {
         container('docker-tools') {
           sh "docker build . -t ${APP_NAME}"
+        }
+      }
+    }
+    stage('Artifact Analysis') {
+      parallel {
+        stage('Container Scan') {
+          steps {
+            container('docker-tools') {
+              sh "grype ${APP_NAME}"
+            }
+          }
+        }
+        stage('Container Audit') {
+          steps {
+            container('docker-tools') {
+              sh "dockle ${APP_NAME}"
+            }
+          }
         }
       }
     }
