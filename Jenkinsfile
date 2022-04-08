@@ -47,6 +47,13 @@ pipeline {
             }
           }
         }
+        stage('Dependency Check') {
+          steps {
+            container('maven') {
+              sh 'mnv org.owasp:dependency-check-maven:check'
+            }
+          }
+        }
       }
     }
     stage('Package') {
