@@ -50,7 +50,7 @@ pipeline {
         stage('Dependency Check') {
           steps {
             container('maven') {
-              sh './mnvw org.owasp:dependency-check-maven:check'
+              sh './mvnw org.owasp:dependency-check-maven:check'
             }
           }
           post {
