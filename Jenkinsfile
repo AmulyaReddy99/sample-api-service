@@ -24,7 +24,7 @@ pipeline {
           steps {
             container('trufflehog') {
               catchError(buildResult: 'SUCESS', stageResult: 'FAILURE') {
-                sh "trufflehog ${GIT_URL}"
+                sh "trufflehog --exclude_paths secrets-exclude.txt ${GIT_URL}"
               }
             }
           }
