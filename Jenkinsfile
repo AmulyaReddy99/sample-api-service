@@ -20,6 +20,15 @@ pipeline {
             }
           }
         }
+        stage('Secrets scanner') {
+          steps {
+            container('trufflehog') {
+              catchError(buildResult: 'SUCESS', stageResult: 'FAILURE') {
+                sh "trufflehog ${GIT_URL}"
+              }
+            }
+          }
+        }
       }
     }
     stage('Build') {
