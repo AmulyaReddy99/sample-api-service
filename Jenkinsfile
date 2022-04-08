@@ -23,7 +23,7 @@ pipeline {
         stage('Secrets scanner') {
           steps {
             container('trufflehog') {
-              catchError(buildResult: 'SUCESS', stageResult: 'FAILURE') {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                 sh "trufflehog -x secrets-exclude.txt ${GIT_URL}"
               }
             }
