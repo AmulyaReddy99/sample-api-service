@@ -140,15 +140,6 @@ pipeline {
         }
       }
     }
-    stage('DAST') {
-      steps {
-        container('docker-tools') {
-          sh "docker pull owasp/zap2docker-weekly"
-          sh "docker run -t owasp/zap2docker-weekly zap-api-scan.py -t http://172.17.0.4:30001/v3/api-docs -f openapi"
-          // sh "docker push ${APP_NAME}"
-        }
-      }
-    }
     stage('Publish') {
       steps {
         container('docker-tools') {
@@ -162,6 +153,15 @@ pipeline {
         container('docker-tools') {
           echo "Deploying the app"
           // sh "kubectl apply -f k8s.yaml"
+        }
+      }
+    }
+    stage('DAST') {
+      steps {
+        container('docker-tools') {
+          sh "docker pull owasp/zap2docker-weekly"
+          sh "docker run -t owasp/zap2docker-weekly zap-api-scan.py -t http://172.17.0.4:30001/v3/api-docs -f openapi"
+          // sh "docker push ${APP_NAME}"
         }
       }
     }
