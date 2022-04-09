@@ -125,19 +125,20 @@ pipeline {
         stage('Container Audit') {
           steps {
             container('docker-tools') {
-              sh "dockle ${APP_NAME}"
+              echo "dockle ${APP_NAME}"
+              // sh "dockle ${APP_NAME}"
             }
           }
         }
-        // stage('Kubesec') {
-        //   steps {
-        //     container('docker-tools') {
-        //       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-        //         sh "kubesec scan k8s.yaml"
-        //       }
-        //     }
-        //   }
-        // }
+        stage('Kubesec') {
+          steps {
+            container('docker-tools') {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                sh "kubesec scan k8s.yaml"
+              }
+            }
+          }
+        }
       }
     }
     stage('Publish') {
