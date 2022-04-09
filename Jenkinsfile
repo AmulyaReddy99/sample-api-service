@@ -67,15 +67,6 @@ pipeline {
             }
           }
         }
-        stage('Kubesec') {
-          steps {
-            container('docker-tools') {
-              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                sh "kubesec scan k8s.yaml"
-              }
-            }
-          }
-        }
         stage('Spot Bugs - Security') {
           steps {
             container('maven') {
@@ -137,6 +128,24 @@ pipeline {
               sh "dockle ${APP_NAME}"
             }
           }
+        }
+        stage('Kubesec') {
+          steps {
+            container('docker-tools') {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                sh "kubesec scan k8s.yaml"
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('DAST') {
+      steps {
+        container('docker-tools') {
+          sh "docker pull owasp/zap2docker-weekly"
+          sh "docker run -t owasp/zap2docker-weekly zap-api-scan.py -t http://172.17.0.4:30001/v3/api-docs -f openapi"
+          // sh "docker push ${APP_NAME}"
         }
       }
     }
